@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Computar</title>
+<style>
+    :root {
+        --size: 50px;
+    }
+    body {
+        background: #222;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+    .computer {
+        width: 700px;
+        height: 400px;
+        background: #444;
+        border: 8px solid #222;
+        border-radius: 16px 16px 8px 8px;
+        box-shadow: 0 8px 32px #000a;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .screen {
+        width: 640px;
+        height: 335px;
+        background: linear-gradient(180deg, #222 80%, #333 100%);
+        border: 8px solid #222;
+        border-radius: 16px;
+        margin-top: 24px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #0f0;
+        font-family: 'Consolas', monospace;
+        font-size: 1.2em;
+        box-shadow:
+            0 0 24px #0f08,
+            0 2px 24px #000a inset,
+            0 0 0 4px #111 inset;
+        position: relative;
+    }
+    .screen::after {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        pointer-events: none;
+        border-radius: 16px;
+        background: linear-gradient(120deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.03) 60%, transparent 100%);
+        z-index: 1;
+    }
+    .computer {
+        width: 700px;
+        height: 400px;
+        background: #444;
+        border: 8px solid #222;
+        border-radius: 16px 16px 8px 8px;
+        box-shadow: 0 8px 32px #000a;
+        top: -200px;
+        left: -370px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .keyboard {
+        width: 745px;
+        background: linear-gradient(180deg, #2b2b2b 60%, #444 100%);
+        border: 6px solid #181818;
+        border-radius: 16px 16px 20px 20px;
+        margin-top: 16px;
+        display: flex;
+        flex-direction: column;
+        font-family: 'Consolas', monospace;
+        top: 240px;
+        left: 360px;
+        gap: 4px;
+        padding: 18px 24px 24px 24px;
+        box-sizing: border-box;
+        box-shadow: 0 8px 32px #000a, 0 2px 8px #111a inset;
+        position: relative;
+    }
+    .key-row {
+        display: flex;
+        flex-direction: row;
+        gap: 6px;
+    }
+    .key {
+        height: 38px;
+        min-width: 38px;
+        background: linear-gradient(180deg, #666 0%, #444 80%, #222 100%);
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 1em;
+        cursor: pointer;
+        user-select: none;
+        transition: background 0.1s, box-shadow 0.1s, transform 0.1s;
+        box-sizing: border-box;
+        padding: 0 8px;
+        box-shadow:
+            0 2px 4px #0008,
+            0 1px 0 #888 inset,
+            0 -2px 8px #111a inset;
+        border: 1.5px solid #222;
+        position: relative;
+    }
+    .key:active {
+        background: linear-gradient(180deg, #888 0%, #555 100%);
+        box-shadow:
+            0 1px 2px #0006,
+            0 1px 0 #aaa inset,
+            0 -2px 8px #222a inset;
+        transform: translateY(2px) scale(0.98);
+    }
+    .key::after {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 3px; left: 6px; right: 6px; height: 7px;
+        border-radius: 4px;
+        background: linear-gradient(90deg, rgba(255,255,255,0.10), rgba(255,255,255,0.03));
+        pointer-events: none;
+    }
+    .key.w2 { min-width: 76px; }
+    .key.w2-5 { min-width: 100px; }
+    .key.w3 { min-width: 120px; }
+    .key.w4 { min-width: 160px; }
+    .key.space { min-width: 280px; }
+    .stand {
+        width: 60px;
+        height: 200px;
+        background: #333;
+        border-radius: 0 0 16px 16px;
+        position: absolute;
+        left: 50%;
+        top: 250px;
+        transform: translateX(-50%);
+        box-shadow: 0 4px 12px #0008;
+        z-index: -1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .stand-bottom {
+        width: 120px;
+        height: 24px;
+        background: #111;
+        border-radius: 24px 24px 0 0;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 190px;
+        box-shadow: 0 8px 24px #000a, 0 2px 8px #111a inset;
+        z-index: 2;
+        border: 3px solid #181818;
+    }
+</style>
+</head>
+<body>
+    <div class="keyboard" id="keyboard"></div>
+    <div class="computer">
+        <div class="screen" id="screen">
+            <span>Wassup<br>type something on that keyboard below 😏️</span>
+        </div>
+        <div class="stand">
+            <div class="stand-bottom"></div>
+        </div>
+    </div>
+    <script>
+        const keyLayout = [
+            [
+            {label:'Esc', key:'Esc'}, {label:'F1', key:'F1'}, {label:'F2', key:'F2'}, {label:'F3', key:'F3'}, {label:'F4', key:'F4'},
+            {label:'F5', key:'F5'}, {label:'F6', key:'F6'}, {label:'F7', key:'F7'}, {label:'F8', key:'F8'},
+            {label:'F9', key:'F9'}, {label:'F10', key:'F10'}, {label:'F11', key:'F11'}, {label:'F12', key:'F12'}, {label:'Home', key:'Home', class:'w3'}
+            ],
+            [
+            {label:'`', key:'`'}, {label:'1', key:'1'}, {label:'2', key:'2'}, {label:'3', key:'3'}, {label:'4', key:'4'}, {label:'5', key:'5'},
+            {label:'6', key:'6'}, {label:'7', key:'7'}, {label:'8', key:'8'}, {label:'9', key:'9'}, {label:'0', key:'0'},
+            {label:'-', key:'-'}, {label:'=', key:'='}, {label:'Backspace', key:'Back', class:'w3'}
+            ],
+            [
+            {label:'Tab', key:'Tab', class:'w2'}, {label:'Q', key:'Q'}, {label:'W', key:'W'}, {label:'E', key:'E'}, {label:'R', key:'R'}, {label:'T', key:'T'},
+            {label:'Y', key:'Y'}, {label:'U', key:'U'}, {label:'I', key:'I'}, {label:'O', key:'O'}, {label:'P', key:'P'},
+            {label:'[', key:'['}, {label:']', key:']'}, {label:'\\', key:'\\', class:'w2'}
+            ],
+            [
+            {label:'Caps', key:'Caps', class:'w2-5'}, {label:'A', key:'A'}, {label:'S', key:'S'}, {label:'D', key:'D'}, {label:'F', key:'F'}, {label:'G', key:'G'},
+            {label:'H', key:'H'}, {label:'J', key:'J'}, {label:'K', key:'K'}, {label:'L', key:'L'},
+            {label:';', key:';'}, {label:":", key:":"}, {label:'Enter', key:'Enter', class:'w2-5'}
+            ],
+            [
+            {label:'Shift', key:'Shift', class:'w3'}, {label:'Z', key:'Z'}, {label:'X', key:'X'}, {label:'C', key:'C'}, {label:'V', key:'V'}, {label:'B', key:'B'},
+            {label:'N', key:'N'}, {label:'M', key:'M'}, {label:',', key:','}, {label:'.', key:'.'}, {label:'/', key:'/'}, {label:'Shift', key:'Shift', class:'w3'}
+            ],
+            [
+            {label:'Ctrl', key:'Ctrl', class:'w2'}, {label:'Win', key:'Win', class:'w2'}, {label:'Alt', key:'Alt', class:'w2'},
+            {label:'', key:'Space', class:'space'}, {label:'Alt', key:'Alt', class:'w2'}, {label:'Fn', key:'Fn', class:'w2'}
+            ]
+        ];
+
+        const keyboard = document.getElementById('keyboard');
+        const screen = document.getElementById('screen');
+        let text = '';
+
+        keyLayout.forEach(row => {
+            const rowDiv = document.createElement('div');
+            rowDiv.className = 'key-row';
+            row.forEach(k => {
+                const key = document.createElement('div');
+                key.className = 'key' + (k.class ? ' ' + k.class : '');
+                key.textContent = k.label || '';
+                key.onclick = () => {
+                    if (k.key === 'Space') text += ' ';
+                    else if (k.key === 'Back') text = text.slice(0, -1);
+                    else if (k.key === 'Enter') text += '\n';
+                    else if (k.key.length === 1) text += k.key;
+                    // Ignoring modifier keys  like(Ctrl, Alt, Shift and the rest)
+                    screen.innerHTML = text.replace(/\n/g, '<br>') || '<span>Wassup<br>type something on that keyboard below 😏️</span>';
+                };
+                rowDiv.appendChild(key);
+            });
+            keyboard.appendChild(rowDiv);
+        });
+    </script>
+</body>
+</html>
